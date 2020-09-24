@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from users import views as user_views
 
 #patterns to match e.g. 'about/' and sending it to blog.urls for 
 #further processing, it will chop out matched part and mathes the rest
@@ -27,6 +28,7 @@ from django.urls import path, include
 #blog page is now the home page of our website, thats why is empty path
 urlpatterns = [
     path('admin/', admin.site.urls), 
+    path('register/', user_views.register, name='register'),
     path('', include('blog.urls')), 
 
 ]
