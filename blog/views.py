@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from .models import Post
 
+from django.views.generic import (ListView, DetailView, CreateView, 
+                                  UpdateView, DeleteView)
+
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 #This is when we create manual html page
 # =============================================================================
 #from django.http import HttpResponse
@@ -44,6 +48,53 @@ def home(request):
         }
     return render (request, 'blog/home.html', context)
 
+#Rewrite above home into Class based views
+class PostListView(ListView):
+    #create model which to query to create post
+    model = Post
+    #we need to change the template where its looking for
+    # <app>/<model>_<viewtype>.html
+    template_name = 'blog/home.html'
+    context_object_name = 'posts'
+    #order posts from newest to oldest
+    ordering = ['-date_posted']
+    
+class PostDetailView(DetailView):
+    model = Post
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    fields = ['title', 'content']
+    #so it automatically see current user as the post writer
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    fields = ['title', 'content']
+    #so it automatically see current user as the post writer
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+    #check if user is the author and then allow them to update the post
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+    
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    success_url = '/'
+    
+    #check if user is the author and then allow them to delete the post
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
 
 def about(request):
 
