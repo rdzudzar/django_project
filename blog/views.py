@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Post
 
 from django.views.generic import (ListView, DetailView, CreateView, 
                                   UpdateView, DeleteView)
-
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import (LoginRequiredMixin, 
+                                        UserPassesTestMixin)
+                                        
 #This is when we create manual html page
 # =============================================================================
 #from django.http import HttpResponse
@@ -58,6 +60,24 @@ class PostListView(ListView):
     context_object_name = 'posts'
     #order posts from newest to oldest
     ordering = ['-date_posted']
+    #Paginator
+    paginate_by = 5
+    
+class UserPostListView(ListView):
+    #create model which to query to create post
+    model = Post
+    #we need to change the template where its looking for
+    # <app>/<model>_<viewtype>.html
+    template_name = 'blog/user_posts.html'
+    context_object_name = 'posts'
+    #Paginator
+    paginate_by = 5
+    
+    #it will get username if it exist, else it will give us 404
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return Post.objects.filter(author=user).order_by('-date_posted')
+        
     
 class PostDetailView(DetailView):
     model = Post

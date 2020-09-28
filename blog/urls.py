@@ -8,12 +8,14 @@ Created on Wed Sep 23 15:09:58 2020
 from django.urls import path
 from . import views
 from .views import (PostListView, PostDetailView, PostCreateView,
-                    PostUpdateView, PostDeleteView)
+                    PostUpdateView, PostDeleteView, UserPostListView)
 
 #matched patterns withing given functions in views.py 
 urlpatterns = [
     #path('', views.home, name='blog-home'),  #regular
     path('', PostListView.as_view(), name='blog-home'),
+    #for each user
+    path('user/<str:username>', UserPostListView.as_view(), name='user-posts'),
     #route
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     #new post
