@@ -29,7 +29,7 @@ DEBUG = False
 #Set == 'True' - in production; 'False' when deployed
 #DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
 
-ALLOWED_HOSTS = ['djangotutorialblogapp.herokuapp.com']
+ALLOWED_HOSTS = ['mydjangotutorialapp.herokuapp.com']
 
 
 # Application definition
