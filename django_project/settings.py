@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
+DEBUG = True
 #Set == 'True' - in production; 'False' when deployed
-DEBUG = (os.environ.get('DEBUG_VALUE') == 'False')
+#DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
 
 ALLOWED_HOSTS = ['mydjangotutorialapp.herokuapp.com']
 
